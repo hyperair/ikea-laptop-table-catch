@@ -1,10 +1,12 @@
 include <MCAD/units/metric.scad>
+use <MCAD/shapes/polyhole.scad>
+use <MCAD/fasteners/nuts_and_bolts.scad>
 
 $fs = 0.4;
 $fa = 1;
 
 screwhole_pos = [62.5, -39];
-split_for_print = false;
+split_for_print = true;
 
 module basic_shape ()
 {
@@ -21,6 +23,19 @@ module basic_shape ()
     /* live spring */
     translate ([36, -41])
     square ([22.73, 1.79]);
+}
+
+module place_joining_screwholes ()
+{
+    positions = [
+        [7, -5],
+        [28, -5],
+        [28, -17]
+    ];
+
+    for (pos = positions)
+    translate (pos)
+    children ();
 }
 
 module table_thing ()
@@ -42,6 +57,17 @@ module table_thing ()
         /* screwhole cylinder */
         translate (screwhole_pos)
         cylinder (d = 2.9, h = 1000, center = true);
+
+        if (split_for_print)
+        place_joining_screwholes () {
+            mcad_polyhole (d = 3.3, h = 1000, center = true);
+
+            translate ([0, 0, 40])
+            mcad_polyhole (d = 5.5, h = 1000);
+
+            translate ([0, 0, -epsilon])
+            mcad_nut_hole (3);
+        }
     }
 }
 
@@ -58,17 +84,18 @@ module split_for_print (z, bbox = [200, 200], move = [200, 200])
 
     translate (move)
     difference () {
+        rotate (180, X)
         translate ([0, 0, -z])
         children ();
 
-        rotate (180, X)
+        mirror (Z)
         translate (-bbox / 2)
         cube (concat (bbox, [1000]));
     }
 }
 
 if (split_for_print) {
-    split_for_print (z = 50.85 / 2, move = [0, 100])
+    split_for_print (z = 43.9 / 2, move = [0, 50])
     table_thing ();
 } else {
     table_thing ();
