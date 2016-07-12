@@ -21,7 +21,8 @@ module basic_shape ()
     square ([3, 13]);
 
     /* live spring */
-    translate ([36, -41])
+    translate ([37, -45])
+    rotate (15, Z)
     square ([22.73, 1.79]);
 }
 
