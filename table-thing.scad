@@ -1,6 +1,7 @@
 include <MCAD/units/metric.scad>
 use <MCAD/shapes/polyhole.scad>
 use <MCAD/fasteners/nuts_and_bolts.scad>
+use <MCAD/array/along_curve.scad>
 
 $fs = 0.4;
 $fa = 1;
@@ -63,10 +64,12 @@ module table_thing ()
         place_joining_screwholes () {
             mcad_polyhole (d = 3.3, h = 1000, center = true);
 
-            translate ([0, 0, 40])
+            translate ([0, 0, 35])
             mcad_polyhole (d = 5.5, h = 1000);
 
-            translate ([0, 0, -epsilon])
+            translate ([0, 0, 10 - 3])
+            hull ()
+            mcad_linear_multiply (no = 2, separation = 10, axis = -Z)
             mcad_nut_hole (3);
         }
     }
