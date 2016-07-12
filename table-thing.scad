@@ -4,7 +4,7 @@ $fs = 0.4;
 $fa = 1;
 
 screwhole_pos = [62.5, -39];
-split_for_print = true;
+split_for_print = false;
 
 module basic_shape ()
 {
@@ -17,10 +17,15 @@ module basic_shape ()
     /* flange for fingers */
     translate ([0, -7.8])
     square ([3, 13]);
+
+    /* live spring */
+    translate ([36, -41])
+    square ([22.73, 1.79]);
 }
 
 module table_thing ()
 {
+    render ()
     difference () {
         union () {
             linear_extrude (height = 43.9)
@@ -30,9 +35,11 @@ module table_thing ()
             cylinder (d = 5.93, h = 50.85);
         }
 
+        /* center cutout */
         translate ([35.88, -500, (43.9 - 29.86) / 2])
         cube ([1000, 1000, 29.86]);
 
+        /* screwhole cylinder */
         translate (screwhole_pos)
         cylinder (d = 2.9, h = 1000, center = true);
     }
